@@ -191,14 +191,24 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 
 void Renderer::Class0310()
 {
-	float vertices[] = { 0, 0, 0, 1, 0, 0, 1, 1, 0 }; //CPU memory
+	float vertices[] = { 0, 0, 0, 
+						 1, 0, 0, 
+						 1, 1, 0 }; //CPU memory
 	
 	glGenBuffers(1,&m_testVBO); //get Buffers Object ID
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO); //bind to array buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //data trandfer cpu -> gpu
 																			   //굉장히 조심히 써야 한다.
+	float vertices1[] = { -1 ,-1,0,
+							0,-1,0,
+							0,0,0};
+	glGenBuffers(1, &m_testVBO1);
+	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO1);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
+
 
 }
+float i = 0.0;
 void Renderer::Class0310_Render()
 {
 	//Program select
@@ -206,9 +216,27 @@ void Renderer::Class0310_Render()
 	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0, 0, 0, 1);
 	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1, 1, 1, 1);
 
-	glEnableVertexAttribArray(0);
+	int attribLoc_Position = -1;
+	attribLoc_Position = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	
+	glEnableVertexAttribArray(attribLoc_Position);
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(attribLoc_Position, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3); //23-03-10 수업 끝
+	int attribLoc_Position1 = -1;
+	attribLoc_Position1 = glGetAttribLocation(m_SolidRectShader, "a_Position1");
+
+	glEnableVertexAttribArray(attribLoc_Position1);
+	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO1);
+	glVertexAttribPointer(attribLoc_Position1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	// uniform 변수
+	int uniformLoc_Scale = -1;
+	i += 0.0001f;
+	uniformLoc_Scale = glGetUniformLocation(m_SolidRectShader, "u_Scale");
+	glUniform1f(uniformLoc_Scale, i);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
 }
