@@ -287,6 +287,7 @@ void Renderer::DrawParticleEffect()
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
 	glVertexAttribPointer(attribLoc_Particle, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVerticesCount);
 
 }
