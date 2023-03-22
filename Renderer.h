@@ -17,6 +17,7 @@ public:
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void Class0310_Render();
 	void DrawParticleEffect();
+	
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -29,10 +30,12 @@ private:
 	
 
 	//VBO
-	void CreateParticles();
+	void CreateParticles(int numParticles);
 	GLuint m_ParticleVBO = -1;
 	GLuint m_ParticleShader = -1;
 	GLuint m_ParticleVerticesCount = 0;
+
+	GLuint m_ParticleVelVBO = -1;
 
 	bool m_Initialized = false;
 	
