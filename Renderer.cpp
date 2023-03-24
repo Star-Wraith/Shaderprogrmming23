@@ -50,7 +50,7 @@ void Renderer::CreateVertexBufferObjects()
 	//glGenBuffers(1, &m_VBORect);
 	//glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
-	CreateParticles(1000);
+	CreateParticles(1);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -298,10 +298,22 @@ void Renderer::DrawParticleEffect()
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVelVBO);
 	glVertexAttribPointer(attribuLoc_Vel, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	int attribuLoc_EmitTime = -1;
+	attribuLoc_EmitTime = glGetAttribLocation(shaderProgram, "a_EmitTime");
+	glEnableVertexAttribArray(attribuLoc_EmitTime);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleEmitTimeVBO);
+	glVertexAttribPointer(attribuLoc_EmitTime, 1, GL_FLOAT, GL_FALSE, 0, 0);
+
+	int attribuLoc_LifeTime = -1;
+	attribuLoc_LifeTime = glGetAttribLocation(shaderProgram, "a_LifeTime");
+	glEnableVertexAttribArray(attribuLoc_LifeTime);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleLifeTimeVBO);
+	glVertexAttribPointer(attribuLoc_LifeTime, 1, GL_FLOAT, GL_FALSE, 0, 0);
+
 	int uniformLoc_Time = -1;
 	uniformLoc_Time = glGetUniformLocation(shaderProgram, "u_Time");
 	glUniform1f(uniformLoc_Time, g_time);
-	g_time += 0.00008f;
+	g_time += 0.0008f;
 
 
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVerticesCount);
@@ -317,13 +329,14 @@ void Renderer::CreateParticles(int numParticles)
 	int particleCount = numParticles;
 	m_ParticleVerticesCount = particleCount * 6 * 3;
 	float* vertices = NULL;
-
+	int floatCountSingle = particleCount * 6 * 1;
 	vertices = new float[m_ParticleVerticesCount];
+	
 
 	//위치에 관련된 부분
 
 	int index = 0;
-	for (int i = 0; i < numParticles; ++i) {
+	for (int i = 0; i < particleCount; ++i) {
 		centerX = 0.f;// ((float)rand() / RAND_MAX) * 2.f - 1.f;
 		centerY = 0.f;// ((float)rand() / RAND_MAX) * 2.f - 1.f;
 
@@ -350,10 +363,12 @@ void Renderer::CreateParticles(int numParticles)
 		
 	}
 
+
 	glGenBuffers(1, &m_ParticleVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_ParticleVerticesCount, vertices, GL_STATIC_DRAW);
 
+	delete[] vertices;
 
 	//속도에 관한 부분
 	float* verticesVel = NULL;
@@ -361,8 +376,8 @@ void Renderer::CreateParticles(int numParticles)
 	verticesVel = new float[m_ParticleVerticesCount];
 
 	index = 0;
-	for (int i = 0; i < numParticles; ++i) {
-		
+	for (int i = 0; i < particleCount; ++i) {
+
 		centerX = ((float)rand() / RAND_MAX) * 2.f - 1.f;
 		centerY = ((float)rand() / RAND_MAX) * 2.f; //- 1.f;
 
@@ -391,9 +406,62 @@ void Renderer::CreateParticles(int numParticles)
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVelVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_ParticleVerticesCount, verticesVel, GL_STATIC_DRAW);
 
+	delete[] verticesVel;
 
-	delete vertices;
-	delete verticesVel;
+	//emit time
+	float* verticesEmitTime = NULL;
+	verticesEmitTime = new float[floatCountSingle];
+
+	index = 0;
+	for (int i = 0; i < particleCount; ++i) {
+
+		float emitTime = ((float)rand() / RAND_MAX) * 10.f;
+
+		verticesEmitTime[index] = emitTime; ++index;
+		verticesEmitTime[index] = emitTime; ++index;
+		verticesEmitTime[index] = emitTime; ++index;
+
+
+		verticesEmitTime[index] = emitTime; ++index;
+		verticesEmitTime[index] = emitTime; ++index;
+		verticesEmitTime[index] = emitTime; ++index;
+	}
+
+	glGenBuffers(1, &m_ParticleEmitTimeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleEmitTimeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_ParticleEmitTimeVBO, verticesEmitTime, GL_STATIC_DRAW);
+
+	
+	
+	delete[] verticesEmitTime;
+
+
+	//emit time
+	float* verticesLifeTime = NULL;
+	verticesLifeTime = new float[floatCountSingle];
+
+	index = 0;
+	for (int i = 0; i < particleCount; ++i) {
+
+		float lifeTime = ((float)rand() / RAND_MAX) * 2.f;
+
+		verticesLifeTime[index] = lifeTime; ++index;
+		verticesLifeTime[index] = lifeTime; ++index;
+		verticesLifeTime[index] = lifeTime; ++index;
+
+
+		verticesLifeTime[index] = lifeTime; ++index;
+		verticesLifeTime[index] = lifeTime; ++index;
+		verticesLifeTime[index] = lifeTime; ++index;
+	}
+
+	glGenBuffers(1, &m_ParticleLifeTimeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleLifeTimeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_ParticleLifeTimeVBO, verticesLifeTime, GL_STATIC_DRAW);
+
+
+	delete[] verticesLifeTime;
+
 
 
 }
