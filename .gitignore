@@ -1,0 +1,13 @@
+*.lib
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*eglew.h
+*freeglut.h
+*freeglut_ext.h
+*freeglut_std.h
+*glew.h
+*glut.h
+*glxew.h
+*wglew.h
+x64/
