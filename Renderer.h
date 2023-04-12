@@ -17,6 +17,7 @@ public:
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void Class0310_Render();
 	void DrawParticleEffect();
+	void DrawFragmentSandbox();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -55,6 +56,9 @@ private:
 	GLuint m_testVBO = 0;
 	GLuint m_testVBO1 = 0;
 	GLuint m_testVBOColor = 0;
+
+	GLuint m_FragmentSandboxShader = 0;
+	GLuint m_FragmentSandboxVBO = 0;
 
 };
 

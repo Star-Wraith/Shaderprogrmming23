@@ -21,6 +21,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_ParticleShader = CompileShaders("./Shaders/Particle.vs", "./Shaders/Particle.fs");
+	m_FragmentSandboxShader = CompileShaders("./Shaders/FragmentSandbox.vs", "./Shaders/FragmentSandbox.fs");
+
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -74,6 +76,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesColor), verticesColor, GL_STATIC_DRAW); //data transfer from CPU to GPU
 
 
+
 	/*float* temp;
 	int size = 400000000000000;
 	temp = new float[size];
@@ -84,6 +87,21 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*size, temp, GL_STATIC_DRAW);
 
 	std::cout << "asdf" << std::endl;*/
+
+	float rect1[]
+		=
+	{
+		 -1.f , -1.f , 0.f,			0.f, 1.f   // x, y, z , tx, ty
+		,-1.f ,  1.f , 0.f,			0.f, 0.f
+		, 1.f ,  1.f , 0.f,			1.f, 0.f
+		,-1.f , -1.f , 0.f,			0.f, 1.f
+		, 1.f ,  1.f , 0.f,			1.f, 0.f
+		, 1.f , -1.f , 0.f,			1.f, 1.f
+	};
+
+	glGenBuffers(1, &m_FragmentSandboxVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_FragmentSandboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect1), rect1, GL_STATIC_DRAW);
 
 	CreateParticles(10000);
 }
@@ -266,6 +284,10 @@ void Renderer::DrawParticleEffect()
 	int program = m_ParticleShader;
 	glUseProgram(program);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
 	//int attribLoc_Position = -1;
 	//attribLoc_Position = glGetAttribLocation(program, "a_Position");
 	//glEnableVertexAttribArray(attribLoc_Position);
@@ -341,6 +363,28 @@ void Renderer::DrawParticleEffect()
 	g_time += 0.0005;
 
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVerticesCount);
+
+	glDisable(GL_BLEND);
+}
+
+void Renderer::DrawFragmentSandbox()
+{
+	GLuint shader = m_FragmentSandboxShader;
+	glUseProgram(shader);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	int posLoc = glGetAttribLocation(shader, "a_Position");
+	int texLoc = glGetAttribLocation(shader, "a_Texcoord");
+
+	glEnableVertexAttribArray(posLoc);
+	glEnableVertexAttribArray(texLoc);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_FragmentSandboxVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glVertexAttribPointer(texLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
