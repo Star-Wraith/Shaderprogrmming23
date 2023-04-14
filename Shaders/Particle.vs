@@ -8,6 +8,7 @@ in float a_Period;
 in float a_Amp;
 in float a_Value;
 in vec4 a_Color;
+in vec2 a_UV;
 
 uniform float u_Time;
 
@@ -19,6 +20,7 @@ const float c_Period = 1.0;
 const float c_Amp = 1.0;
 
 varying vec4 v_Color;
+out vec2 v_UV;
 
 void GraphSin()
 {
@@ -57,7 +59,7 @@ void GraphSin()
 
 	gl_Position = newPosition;
 	v_Color = vec4(a_Color.rgb, a_Color.a * newAlpha);
-	
+	v_UV = a_UV;
 
 }
 
@@ -81,10 +83,12 @@ void P1()
 
 	gl_Position = newPosition;
 	v_Color = a_Color;
+	v_UV = a_UV;
 }
 
 void main()
 {
 	GraphSin();
+	
 	//gl_Position = P1();
 }

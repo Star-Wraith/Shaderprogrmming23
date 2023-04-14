@@ -227,6 +227,7 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), newX, newY, 0, size);
 	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), r, g, b, a);
+	
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
@@ -312,11 +313,17 @@ void Renderer::DrawParticleEffect()
 	int attribLoc_Vel = -1;
 	attribLoc_Vel = glGetAttribLocation(program, "a_Vel");
 	glEnableVertexAttribArray(attribLoc_Vel);
-	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePositionColorVelVBO);
 
-	glVertexAttribPointer(attribLoc_Position, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 10, 0);
-	glVertexAttribPointer(attribLoc_Color, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (GLvoid*)(3 * sizeof(float)));
-	glVertexAttribPointer(attribLoc_Vel, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (GLvoid*)(7 * sizeof(float)));
+	int attribLoc_UV = -1;
+	attribLoc_UV = glGetAttribLocation(program, "a_UV");
+	glEnableVertexAttribArray(attribLoc_UV);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePositionColorVelUVVBO);
+
+	glVertexAttribPointer(attribLoc_Position, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 12, 0);
+	glVertexAttribPointer(attribLoc_Color, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(3 * sizeof(float)));
+	glVertexAttribPointer(attribLoc_Vel, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(7 * sizeof(float)));
+	glVertexAttribPointer(attribLoc_UV, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(10 * sizeof(float)));
 
 
 	//int attribLoc_Vel = -1;
@@ -362,6 +369,8 @@ void Renderer::DrawParticleEffect()
 	glUniform1f(uniformLoc_Time, g_time);
 	g_time += 0.0005;
 
+
+
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVerticesCount);
 
 	glDisable(GL_BLEND);
@@ -384,6 +393,23 @@ void Renderer::DrawFragmentSandbox()
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
 	glVertexAttribPointer(texLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
 
+	int uniformLoc_Point = -1;
+	uniformLoc_Point = glGetUniformLocation(shader, "u_Point");
+	glUniform2f(uniformLoc_Point, 0.5f, 0.5f);
+
+	float points[] = { 0.5f, 0.5f,
+					  0.f,0.f,
+					  1.f,1.f };
+
+	int uniformLoc_Points = -1;
+	uniformLoc_Points = glGetUniformLocation(shader, "u_Points");
+	glUniform2fv(uniformLoc_Points,3, points);
+
+	int uniformLoc_Time = -1;
+	uniformLoc_Time = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(uniformLoc_Time, g_time);
+	g_time += 0.001;
+	
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -402,13 +428,13 @@ void Renderer::CreateParticles(int numParticles)
 	float centerX, centerY;
 	centerX = 0.f;
 	centerY = 0.f;
-	float size = 0.01f;
+	float size = 0.1f;
 	int particleCount = numParticles;
 	m_ParticleVerticesCount = particleCount * 6;
 	int floatCount = particleCount * 6 * 3; // x,y,z per vertex
 	int floatCountColor = particleCount * 6 * 4; // r, g ,b ,a per vertex
 	int floatCountSingle = particleCount * 6;
-	int floatCountPosColorVel = particleCount * 6 * (3 + 4 + 3); 
+	int floatCountPosColorVelUV = particleCount * 6 * (3 + 4 + 3 + 2); 
 											// x, y, z, r, g, b, a, vx, vy, vz (10)
 
 	float* vertices = NULL;
@@ -494,9 +520,9 @@ void Renderer::CreateParticles(int numParticles)
 
 	delete[] verticesColor;
 
-	//pos_color
-	float* verticesPosColorVel = NULL;
-	verticesPosColorVel = new float[floatCountPosColorVel];
+	//PosColorVelUV
+	float* verticesPosColorVelUV = NULL;
+	verticesPosColorVelUV = new float[floatCountPosColorVelUV];
 
 	index = 0;
 	for (int i = 0; i < particleCount; i++)
@@ -511,80 +537,95 @@ void Renderer::CreateParticles(int numParticles)
 		float centerXVel = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		float centerYVel = ((float)rand() / (float)RAND_MAX) * 2.f;// -1.f;
 
-		verticesPosColorVel[index] = centerX - size; index++;
-		verticesPosColorVel[index] = centerY + size; index++;
-		verticesPosColorVel[index] = 0.f; index++; // x, y, z
-		verticesPosColorVel[index] = r; index++;
-		verticesPosColorVel[index] = g; index++;
-		verticesPosColorVel[index] = b; index++;
-		verticesPosColorVel[index] = a; index++; // r, g, b, a,
-		verticesPosColorVel[index] = centerXVel; index++;
-		verticesPosColorVel[index] = centerYVel; index++;
-		verticesPosColorVel[index] = 0; index++;
+		verticesPosColorVelUV[index] = centerX - size; index++;
+		verticesPosColorVelUV[index] = centerY + size; index++;
+		verticesPosColorVelUV[index] = 0.f; index++; // x, y, z
+		verticesPosColorVelUV[index] = r; index++;
+		verticesPosColorVelUV[index] = g; index++;
+		verticesPosColorVelUV[index] = b; index++;
+		verticesPosColorVelUV[index] = a; index++; // r, g, b, a,
+		verticesPosColorVelUV[index] = centerXVel; index++;
+		verticesPosColorVelUV[index] = centerYVel; index++;
+		verticesPosColorVelUV[index] = 0; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;
 
-		verticesPosColorVel[index] = centerX - size; index++;
-		verticesPosColorVel[index] = centerY - size; index++;
-		verticesPosColorVel[index] = 0.f; index++;// x, y, z
-		verticesPosColorVel[index] = r; index++;
-		verticesPosColorVel[index] = g; index++;
-		verticesPosColorVel[index] = b; index++;
-		verticesPosColorVel[index] = a; index++; // r, g, b, a,
-		verticesPosColorVel[index] = centerXVel; index++;
-		verticesPosColorVel[index] = centerYVel; index++;
-		verticesPosColorVel[index] = 0; index++;
+		verticesPosColorVelUV[index] = centerX - size; index++;
+		verticesPosColorVelUV[index] = centerY - size; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;// x, y, z
+		verticesPosColorVelUV[index] = r; index++;
+		verticesPosColorVelUV[index] = g; index++;
+		verticesPosColorVelUV[index] = b; index++;
+		verticesPosColorVelUV[index] = a; index++; // r, g, b, a,
+		verticesPosColorVelUV[index] = centerXVel; index++;
+		verticesPosColorVelUV[index] = centerYVel; index++;
+		verticesPosColorVelUV[index] = 0; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;
+		verticesPosColorVelUV[index] = 1.f; index++;
 
-		verticesPosColorVel[index] = centerX + size; index++;
-		verticesPosColorVel[index] = centerY + size; index++;
-		verticesPosColorVel[index] = 0.f; index++;// x, y, z
-		verticesPosColorVel[index] = r; index++;
-		verticesPosColorVel[index] = g; index++;
-		verticesPosColorVel[index] = b; index++;
-		verticesPosColorVel[index] = a; index++; // r, g, b, a,
-		verticesPosColorVel[index] = centerXVel; index++;
-		verticesPosColorVel[index] = centerYVel; index++;
-		verticesPosColorVel[index] = 0; index++;
+		verticesPosColorVelUV[index] = centerX + size; index++;
+		verticesPosColorVelUV[index] = centerY + size; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;// x, y, z
+		verticesPosColorVelUV[index] = r; index++;
+		verticesPosColorVelUV[index] = g; index++;
+		verticesPosColorVelUV[index] = b; index++;
+		verticesPosColorVelUV[index] = a; index++; // r, g, b, a,
+		verticesPosColorVelUV[index] = centerXVel; index++;
+		verticesPosColorVelUV[index] = centerYVel; index++;
+		verticesPosColorVelUV[index] = 0; index++;
+		verticesPosColorVelUV[index] = 1.f; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;
 
-		verticesPosColorVel[index] = centerX + size; index++;
-		verticesPosColorVel[index] = centerY + size; index++;
-		verticesPosColorVel[index] = 0.f; index++;// x, y, z
-		verticesPosColorVel[index] = r; index++;
-		verticesPosColorVel[index] = g; index++;
-		verticesPosColorVel[index] = b; index++;
-		verticesPosColorVel[index] = a; index++; // r, g, b, a,
-		verticesPosColorVel[index] = centerXVel; index++;
-		verticesPosColorVel[index] = centerYVel; index++;
-		verticesPosColorVel[index] = 0; index++;
+		verticesPosColorVelUV[index] = centerX + size; index++;
+		verticesPosColorVelUV[index] = centerY + size; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;// x, y, z
+		verticesPosColorVelUV[index] = r; index++;
+		verticesPosColorVelUV[index] = g; index++;
+		verticesPosColorVelUV[index] = b; index++;
+		verticesPosColorVelUV[index] = a; index++; // r, g, b, a,
+		verticesPosColorVelUV[index] = centerXVel; index++;
+		verticesPosColorVelUV[index] = centerYVel; index++;
+		verticesPosColorVelUV[index] = 0; index++;
+		verticesPosColorVelUV[index] = 1.f; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;
 
-		verticesPosColorVel[index] = centerX - size; index++;
-		verticesPosColorVel[index] = centerY - size; index++;
-		verticesPosColorVel[index] = 0.f; index++;// x, y, z
-		verticesPosColorVel[index] = r; index++;
-		verticesPosColorVel[index] = g; index++;
-		verticesPosColorVel[index] = b; index++;
-		verticesPosColorVel[index] = a; index++; // r, g, b, a,
-		verticesPosColorVel[index] = centerXVel; index++;
-		verticesPosColorVel[index] = centerYVel; index++;
-		verticesPosColorVel[index] = 0; index++;
 
-		verticesPosColorVel[index] = centerX + size; index++;
-		verticesPosColorVel[index] = centerY - size; index++;
-		verticesPosColorVel[index] = 0.f; index++;// x, y, z
-		verticesPosColorVel[index] = r; index++;
-		verticesPosColorVel[index] = g; index++;
-		verticesPosColorVel[index] = b; index++;
-		verticesPosColorVel[index] = a; index++; // r, g, b, a,
-		verticesPosColorVel[index] = centerXVel; index++;
-		verticesPosColorVel[index] = centerYVel; index++;
-		verticesPosColorVel[index] = 0; index++;
+		verticesPosColorVelUV[index] = centerX - size; index++;
+		verticesPosColorVelUV[index] = centerY - size; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;// x, y, z
+		verticesPosColorVelUV[index] = r; index++;
+		verticesPosColorVelUV[index] = g; index++;
+		verticesPosColorVelUV[index] = b; index++;
+		verticesPosColorVelUV[index] = a; index++; // r, g, b, a,
+		verticesPosColorVelUV[index] = centerXVel; index++;
+		verticesPosColorVelUV[index] = centerYVel; index++;
+		verticesPosColorVelUV[index] = 0; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;
+		verticesPosColorVelUV[index] = 1.f; index++;
+
+
+		verticesPosColorVelUV[index] = centerX + size; index++;
+		verticesPosColorVelUV[index] = centerY - size; index++;
+		verticesPosColorVelUV[index] = 0.f; index++;// x, y, z
+		verticesPosColorVelUV[index] = r; index++;
+		verticesPosColorVelUV[index] = g; index++;
+		verticesPosColorVelUV[index] = b; index++;
+		verticesPosColorVelUV[index] = a; index++; // r, g, b, a,
+		verticesPosColorVelUV[index] = centerXVel; index++;
+		verticesPosColorVelUV[index] = centerYVel; index++;
+		verticesPosColorVelUV[index] = 0; index++;
+		verticesPosColorVelUV[index] = 1.f; index++;
+		verticesPosColorVelUV[index] = 1.f; index++;
+
 
 	}
 
-	glGenBuffers(1, &m_ParticlePositionColorVelVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePositionColorVelVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * floatCountPosColorVel,
-		verticesPosColorVel, GL_STATIC_DRAW);
+	glGenBuffers(1, &m_ParticlePositionColorVelUVVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePositionColorVelUVVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * floatCountPosColorVelUV,
+		verticesPosColorVelUV, GL_STATIC_DRAW);
 
-	delete[] verticesPosColorVel;
+	delete[] verticesPosColorVelUV;
 
 	//velocity
 	float* verticesVel = NULL;

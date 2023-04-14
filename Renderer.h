@@ -39,7 +39,7 @@ private:
 	GLuint m_ParticleValueVBO = -1;
 	GLuint m_ParticleShader = -1;
 	GLuint m_ParticleColorVBO = -1; // color vbo
-	GLuint m_ParticlePositionColorVelVBO = -1; // pos+color vbo
+	GLuint m_ParticlePositionColorVelUVVBO = -1; // pos+color vbo
 	GLuint m_ParticleVerticesCount = -1;
 	 
 	
