@@ -20,7 +20,7 @@ void test(){
 
 void circle(){
 
-	vec2 temp = v_Texcoord - u_Points[0];
+	vec2 temp = v_Texcoord - vec2(0.5,0.5);
 	float d = length(temp);
 	vec2 temp1 = v_Texcoord - u_Points[1];
 	float d1 = length(temp1);
