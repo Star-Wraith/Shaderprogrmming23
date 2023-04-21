@@ -75,10 +75,26 @@ void rader(){
 
 }
 
+void flag(){
+	float newColor = 0.5 * sin(v_Texcoord.x * c_PI*2);
+	
+	float width = 0.01;
+	if(2.0*(v_Texcoord.y - 0.5 ) > newColor && 
+	2.0*(v_Texcoord.y - 0.5 ) < newColor + width){
+		FragColor = vec4(1);
+	}
+	else{
+		FragColor = vec4(0);
+	}
+
+	
+}
+
 void main()
 {
 	//test();
 	//circle();
 	//circle();
-	rader();
+	//rader();
+	flag();
 }
