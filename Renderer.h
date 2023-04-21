@@ -7,6 +7,9 @@
 
 #include "Dependencies\glew.h"
 
+
+
+
 class Renderer
 {
 public:
@@ -18,6 +21,8 @@ public:
 	void Class0310_Render();
 	void DrawParticleEffect();
 	void DrawFragmentSandbox();
+	void DrawAlphaClear();
+	void DrawVertexSandbox();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -60,5 +65,12 @@ private:
 	GLuint m_FragmentSandboxShader = 0;
 	GLuint m_FragmentSandboxVBO = 0;
 
+	GLuint m_AlphaClearShader = 0;
+	GLuint m_AlphaClearVBO = 0;
+
+	GLuint m_VertexSandboxShader = 0;
+	GLuint m_HoriLineVBO = 0;
+	GLuint m_HoriLineVertexCount = 0;
+	
 };
 

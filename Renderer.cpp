@@ -22,6 +22,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_ParticleShader = CompileShaders("./Shaders/Particle.vs", "./Shaders/Particle.fs");
 	m_FragmentSandboxShader = CompileShaders("./Shaders/FragmentSandbox.vs", "./Shaders/FragmentSandbox.fs");
+	m_AlphaClearShader = CompileShaders("./Shaders/AlphaClear.vs", "./Shaders/AlphaClear.fs");
+	m_VertexSandboxShader = CompileShaders("./Shaders/VertexSandbox.vs", "./Shaders/VertexSandbox.fs");
 
 
 	//Create VBOs
@@ -102,6 +104,38 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_FragmentSandboxVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_FragmentSandboxVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect1), rect1, GL_STATIC_DRAW);
+
+	float rect2[]
+		=
+	{
+		 -1.f , -1.f , 0.f,	   // x, y, z 
+		-1.f ,  1.f , 0.f,	
+		 1.f ,  1.f , 0.f,	
+		-1.f , -1.f , 0.f,	
+		 1.f ,  1.f , 0.f,	
+		 1.f , -1.f , 0.f,	
+	};
+
+	glGenBuffers(1, &m_AlphaClearVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_AlphaClearVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect2), rect2, GL_STATIC_DRAW);
+
+	m_HoriLineVertexCount = 100;
+	int floatCount = m_HoriLineVertexCount * 3;
+	int index = 0;
+	float gap = 2.f / ((float)m_HoriLineVertexCount - 1.0f);
+	float* lineVertices = new float[floatCount];
+
+	for (int i = 0; i < m_HoriLineVertexCount; ++i) {
+		lineVertices[index] = -1.0f + (float)i * gap; index++;
+		lineVertices[index] = 0.f; index++;
+		lineVertices[index] = 0.f; index++;
+	}
+
+	glGenBuffers(1, &m_HoriLineVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_HoriLineVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * floatCount, lineVertices, GL_STATIC_DRAW);
+
 
 	CreateParticles(10000);
 }
@@ -375,6 +409,55 @@ void Renderer::DrawParticleEffect()
 
 	glDisable(GL_BLEND);
 }
+void Renderer::DrawVertexSandbox()
+{
+	GLuint shader = m_VertexSandboxShader;
+	glUseProgram(shader);
+	glEnable(GL_BLEND);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	GLuint posLoc = glGetAttribLocation(shader, "a_Position");
+	glEnableVertexAttribArray(posLoc);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_HoriLineVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	GLuint timeULoc = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(timeULoc, g_time);
+	g_time += 0.0005f;
+
+
+	glDrawArrays(GL_LINE_STRIP, 0, m_HoriLineVertexCount);
+
+	glUniform1f(timeULoc, g_time + 0.1);
+	glDrawArrays(GL_LINE_STRIP, 0, m_HoriLineVertexCount);
+
+	glUniform1f(timeULoc, g_time + 0.2);
+	glDrawArrays(GL_LINE_STRIP, 0, m_HoriLineVertexCount);
+
+	glUniform1f(timeULoc, g_time + 0.3);
+	glDrawArrays(GL_LINE_STRIP, 0, m_HoriLineVertexCount);
+}
+
+void Renderer::DrawAlphaClear()
+{
+	GLuint shader = m_AlphaClearShader;
+	glUseProgram(shader);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	GLuint posLoc = glGetAttribLocation(shader, "a_Position");
+	glEnableVertexAttribArray(posLoc);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_AlphaClearVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+
+}
+
+
 
 void Renderer::DrawFragmentSandbox()
 {
@@ -408,10 +491,12 @@ void Renderer::DrawFragmentSandbox()
 	int uniformLoc_Time = -1;
 	uniformLoc_Time = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uniformLoc_Time, g_time);
-	g_time += 0.001;
+	g_time += 0.002;
 	
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
+
+
 
 void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
 {
@@ -428,7 +513,7 @@ void Renderer::CreateParticles(int numParticles)
 	float centerX, centerY;
 	centerX = 0.f;
 	centerY = 0.f;
-	float size = 0.1f;
+	float size = 0.001f;
 	int particleCount = numParticles;
 	m_ParticleVerticesCount = particleCount * 6;
 	int floatCount = particleCount * 6 * 3; // x,y,z per vertex

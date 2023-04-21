@@ -46,7 +46,7 @@ void circles(){
 
 void rader(){
 	
-	vec2 temp = v_Texcoord - u_Point;
+	vec2 temp = v_Texcoord - vec2(0.5,1.0);
 	
 	float d = length(temp);
 	//float value = sin(c_PI*d - u_Time); // 원이 쪼그라든다. -면 확대되는 느낌
