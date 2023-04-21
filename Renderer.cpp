@@ -413,9 +413,10 @@ void Renderer::DrawVertexSandbox()
 {
 	GLuint shader = m_VertexSandboxShader;
 	glUseProgram(shader);
-	glEnable(GL_BLEND);
 
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	GLuint posLoc = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(posLoc);
 
