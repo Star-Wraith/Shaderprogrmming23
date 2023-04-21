@@ -10,12 +10,14 @@ uniform float u_Time;
 const float c_PI = 3.141592;
 
 void test(){
-	if(v_Texcoord.x > 0.5){
-		FragColor = vec4(v_Texcoord, 0.0 ,1.0);
-	}
-	else{
-		FragColor = vec4(0.0);
-	}
+
+	float newValueX = v_Texcoord.x * 10 * c_PI;
+	float newValueY = v_Texcoord.y * 10 * c_PI;
+	float outColorGrayVertical = sin(newValueX);
+	float outColorGrayHorizontal = sin(newValueY);
+	float newColor = max(outColorGrayVertical, outColorGrayHorizontal);
+	FragColor = vec4(newColor);
+
 }
 
 void circle(){
@@ -76,20 +78,30 @@ void rader(){
 }
 
 void flag(){
-	float newColor = 0.5 * sin(v_Texcoord.x * c_PI*2);
-	
-	float width = 0.01;
-	if(2.0*(v_Texcoord.y - 0.5 ) > newColor && 
-	2.0*(v_Texcoord.y - 0.5 ) < newColor + width){
-		FragColor = vec4(1);
-	}
-	else{
-		FragColor = vec4(0);
-	}
-	printf()
 
+	float finalColor  = 0;
+
+	for(int i = 0; i< 5; ++i){
+		float newTime = u_Time + i * 0.2;
+		float newColor = v_Texcoord.x * 0.5 * sin(v_Texcoord.x * c_PI*2 - 1 * newTime);
+		float sinValue = sin(v_Texcoord.x * c_PI*2*10 - 1 * newTime);
+
+		float width = 0.01* v_Texcoord.x * 30;
+		if(2.0*(v_Texcoord.y - 0.5 ) > newColor && 
+			2.0*(v_Texcoord.y - 0.5 ) < newColor + width){
+
+		
+			finalColor = 1*sinValue;
+		}
+		else{
+		}
+	}
+
+	FragColor = vec4(finalColor);
 	
 }
+
+
 
 void main()
 {
