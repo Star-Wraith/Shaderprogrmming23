@@ -86,6 +86,7 @@ void flag(){
 	else{
 		FragColor = vec4(0);
 	}
+	printf()
 
 	
 }
