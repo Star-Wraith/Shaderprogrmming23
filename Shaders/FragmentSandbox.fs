@@ -52,7 +52,7 @@ void rader(){
 	
 	float d = length(temp);
 	//float value = sin(c_PI*d - u_Time); // 원이 쪼그라든다. -면 확대되는 느낌
-	float value = 0.2* (pow(sin(c_PI*d*2 - u_Time), 12)-0.5); // 원이 얇아진다.
+	float value = 0.2* (pow(sin(c_PI*d*2 - 10 * u_Time), 12)-0.5); // 원이 얇아진다.
 	float temp1 = ceil(value);
 
 
@@ -64,7 +64,7 @@ void rader(){
 		float d = length(temp);
 
 
-		if( d < 0.1){
+		if( d < 0.03){
 			result += 1.0 * temp1;
 		}
 	}
@@ -83,15 +83,15 @@ void flag(){
 
 	for(int i = 0; i< 5; ++i){
 		float newTime = u_Time + i * 0.2;
-		float newColor = v_Texcoord.x * 0.5 * sin(v_Texcoord.x * c_PI*2 - 1 * newTime);
-		float sinValue = sin(v_Texcoord.x * c_PI*2*10 - 1 * newTime);
+		float newColor = v_Texcoord.x * 0.5 * sin(v_Texcoord.x * c_PI*2 - 10 * newTime);
+		float sinValue = sin(v_Texcoord.x * c_PI*2*10 - 500* newTime);
 
-		float width = 0.01* v_Texcoord.x * 30;
+		float width = 0.01* v_Texcoord.x * 5 + 0.001;
 		if(2.0*(v_Texcoord.y - 0.5 ) > newColor && 
 			2.0*(v_Texcoord.y - 0.5 ) < newColor + width){
 
 		
-			finalColor = 1*sinValue;
+			finalColor += 1*sinValue*(1.0-v_Texcoord.x);
 		}
 		else{
 		}

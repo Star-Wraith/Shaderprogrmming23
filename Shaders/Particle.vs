@@ -42,8 +42,8 @@ void GraphSin()
 		float nY = (R-r)*sin(theta) - d * sin((R-r)*theta/r);*/
 
 		float newT = a_LifeTime * fract(t/a_LifeTime);
-		float nX = sin(a_Value * 2.0 * c_PI);
-		float nY = cos(a_Value * 2.0 * c_PI);
+		float nX = sin(a_Value * 2.0 * c_PI );
+		float nY = cos(a_Value * 2.0 * c_PI );
 		newPosition.x = a_Position.x + nX + newT*a_Vel.x;
 		newPosition.y = a_Position.y + nY + newT*a_Vel.y;
 	
@@ -88,7 +88,8 @@ void P1()
 
 void main()
 {
-	GraphSin();
+	//GraphSin();
+	P1();
 	
 	//gl_Position = P1();
 }
