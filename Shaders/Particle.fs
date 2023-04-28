@@ -17,13 +17,16 @@ void circle(){
 	else{
 		FragColor = vec4(0) * v_Color;
 	}
+
+
 }
 
 void circles(){
 
 	vec2 temp = v_UV - vec2(0.5,0.5);
 	float d = length(temp);
-	float value = sin(30*d);  // 원을 ?개 만드려면 어느 정도 값을 넣어야 하나를 공부하기!
+	float value = sin(50*d);  // 원을 ?개 만드려면 어느 정도 값을 넣어야 하나를 공부하기!
+	// 필독!!!! 10도에 하나인듯 합니다!!!!
 	
 	FragColor = vec4(value) * v_Color;
 }
@@ -31,5 +34,7 @@ void circles(){
 void main()
 {
 	//FragColor = v_Color;
-	circle();
+	//circle();
+	circles();
+
 }

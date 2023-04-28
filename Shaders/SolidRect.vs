@@ -19,4 +19,6 @@ void main()
 	newPosition.w= 1;
 	gl_Position = newPosition;
 	v_Color = a_Color;
+
 }
+

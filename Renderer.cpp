@@ -84,6 +84,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO); //bind to array buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //data transfer from CPU to GPU
 
+
 	float vertices1[] = { -1, -1, 0,
 						   0, -1, 0,
 						   0, 0, 0 }; //CPU memory
@@ -143,7 +144,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_AlphaClearVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect2), rect2, GL_STATIC_DRAW);
 
-	m_HoriLineVertexCount = 100;
+	m_HoriLineVertexCount = 1000;
 	int floatCount = m_HoriLineVertexCount * 3;
 	int index = 0;
 	float gap = 2.f / ((float)m_HoriLineVertexCount - 1.0f);
@@ -328,9 +329,11 @@ void Renderer::Class0310_Render()
 	int unifromLoc_Scale = -1;
 	unifromLoc_Scale = glGetUniformLocation(m_SolidRectShader, "u_Scale");
 	glUniform1f(unifromLoc_Scale, g_time);
-	//g_time += 0.016;
-	//if (g_time > 1.f)
-	//	g_time = 0.f;
+
+
+	g_time += 0.001;
+	if (g_time > 1.f)
+		g_time = 0.f;
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -514,6 +517,7 @@ void Renderer::DrawFragmentSandbox()
 	uniformLoc_Points = glGetUniformLocation(shader, "u_Points");
 	glUniform2fv(uniformLoc_Points,3, points);
 
+
 	int uniformLoc_Time = -1;
 	uniformLoc_Time = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uniformLoc_Time, g_time);
@@ -623,6 +627,7 @@ void Renderer::CreateParticles(int numParticles)
 	int floatCountPosColorVelUV = particleCount * 6 * (3 + 4 + 3 + 2); 
 											// x, y, z, r, g, b, a, vx, vy, vz (10)
 
+
 	float* vertices = NULL;
 	vertices = new float[floatCount];
 
@@ -709,6 +714,7 @@ void Renderer::CreateParticles(int numParticles)
 	//PosColorVelUV
 	float* verticesPosColorVelUV = NULL;
 	verticesPosColorVelUV = new float[floatCountPosColorVelUV];
+
 
 	index = 0;
 	for (int i = 0; i < particleCount; i++)
@@ -810,6 +816,7 @@ void Renderer::CreateParticles(int numParticles)
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePositionColorVelUVVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * floatCountPosColorVelUV,
 		verticesPosColorVelUV, GL_STATIC_DRAW);
+
 
 	delete[] verticesPosColorVelUV;
 
