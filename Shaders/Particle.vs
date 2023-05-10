@@ -91,7 +91,7 @@ void P1()
 
 void main()
 {
-	//GraphSin();
+	GraphSin();
 	
 	/*
 	vec4 newPosition = vec4(0, 0, 0, 1);
@@ -117,11 +117,12 @@ void main()
 	v_UV = a_UV;
 	*/
 
-	
+	/*
 	// ¿ø °¹¼ö ±¸ÇÏ·Á°í ³´µÐ ½Ä
 	gl_Position = vec4(10*a_Position,1);
 	v_Color = a_Color;
 	v_UV = a_UV;
+	*/
 
 	//P1();
 

@@ -34,7 +34,7 @@ void circles(){
 void main()
 {
 	//FragColor = v_Color;
-	//circle();
-	circles();
+	circle();
+	//circles();
 
 }

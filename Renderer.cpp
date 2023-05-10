@@ -549,6 +549,9 @@ void Renderer::DrawTextureSandbox()
 	//glBindTexture(GL_TEXTURE_2D, m_CheckerBoardTexture);
 	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
 
+	GLuint repeatULoc = glGetUniformLocation(shader, "u_XYRepeat");
+	glUniform2f(repeatULoc, 2.f, 2.f);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 }
