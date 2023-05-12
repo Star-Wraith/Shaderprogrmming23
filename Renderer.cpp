@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "LoadPng.h"
+#include "windows.h"
 #include <assert.h>
 
 Renderer::Renderer(int windowSizeX, int windowSizeY)
@@ -34,7 +35,14 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	CreateTexture();
 
-	m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
+	//m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
+	m_0Texture = CreatePngTexture("./Texture/Texture0.png", GL_NEAREST);
+	m_1Texture = CreatePngTexture("./Texture/Texture1.png", GL_NEAREST);
+	m_2Texture = CreatePngTexture("./Texture/Texture2.png", GL_NEAREST);
+	m_3Texture = CreatePngTexture("./Texture/Texture3.png", GL_NEAREST);
+	m_4Texture = CreatePngTexture("./Texture/Texture4.png", GL_NEAREST);
+	m_5Texture = CreatePngTexture("./Texture/Texture5.png", GL_NEAREST);
+	m_6Texture = CreatePngTexture("./Texture/Texturemerge.png", GL_NEAREST);
 
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
@@ -543,11 +551,48 @@ void Renderer::DrawTextureSandbox()
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
 	glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
 
+
+
+
 	GLuint samplerULoc = glGetUniformLocation(shader, "u_TexSampler");
-	glUniform1i(samplerULoc, 0);
-	glActiveTexture(GL_TEXTURE);
-	//glBindTexture(GL_TEXTURE_2D, m_CheckerBoardTexture);
-	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+	glUniform1i(samplerULoc, 6);
+	//glUniform1i(samplerULoc, m_CurrentTexID);
+
+	
+	//glActiveTexture(GL_TEXTURE);
+	////glBindTexture(GL_TEXTURE_2D, m_CheckerBoardTexture);
+	//glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+
+	GLuint stepULoc = glGetUniformLocation(shader, "u_Step");
+	glUniform1f(stepULoc, (float)m_CurrentTexID);
+
+	m_CurrentTexID++;
+	if (m_CurrentTexID == 5) {
+		m_CurrentTexID = 0;
+	}
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_0Texture);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_1Texture);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_2Texture);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, m_3Texture);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, m_4Texture);
+
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, m_5Texture);
+
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, m_6Texture);
+
+
 
 	GLuint repeatULoc = glGetUniformLocation(shader, "u_XYRepeat");
 	glUniform2f(repeatULoc, 2.f, 2.f);

@@ -79,6 +79,14 @@ private:
 	GLuint m_TextureSandboxVBO = 0;
 	GLuint m_CheckerBoardTexture = 0;
 	GLuint m_RGBTexture = 0;
-	
+	GLuint m_0Texture = 0;
+	GLuint m_1Texture = 0;
+	GLuint m_2Texture = 0;
+	GLuint m_3Texture = 0;
+	GLuint m_4Texture = 0;
+	GLuint m_5Texture = 0;
+	GLuint m_6Texture = 0;
+	GLuint m_CurrentTexID = 0;
+	GLuint m_MergedTexID = 0;
 };
 

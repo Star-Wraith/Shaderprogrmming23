@@ -5,6 +5,9 @@ layout(location=0) out vec4 FragColor;
 uniform sampler2D u_TexSampler;
 
 uniform vec2 u_XYRepeat;
+
+uniform float u_Step;
+
 in vec2 v_TexPos;
 
 void P1(){
@@ -59,20 +62,28 @@ void P6(){
 	FragColor = texture(u_TexSampler, newTexPos);
 }
 
-void P7(){
+void P7(){ // 시헝 50% <- 왠만하면 나온다는 뜻, 이거랑 똑같진 않지요
 	//float x_repeat = u_XYRepeat.x;
 	//float y_repeat = u_XYRepeat.y;
 	float y = (v_TexPos.x + v_TexPos.y);
-	float x = fract(v_TexPos.x + (1.0 - v_TexPos.y)) ;
+	float x = fract(v_TexPos.x + (1.0 - v_TexPos.y));
 	vec2 newTexPos = vec2(x,y);
 	FragColor = texture(u_TexSampler, newTexPos);
 	//FragColor = vec4(x);
 }
 
+void MultiTexture(){
+
+
+	float x = v_TexPos.x;
+	float y = u_Step/6.0 + v_TexPos.y /6.0;
+	vec2 newTexPos = vec2(x,y);
+	FragColor = texture(u_TexSampler, newTexPos);
+}
 
 void main()
 {
-	P4();
+	MultiTexture();
 	
 	//FragColor = texture(u_TexSampler, newTexPos);
 }
