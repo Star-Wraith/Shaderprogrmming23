@@ -35,15 +35,16 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	CreateTexture();
 
-	//m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
-	m_0Texture = CreatePngTexture("./Texture/Texture0.png", GL_NEAREST);
+	m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
+	/*m_0Texture = CreatePngTexture("./Texture/Texture0.png", GL_NEAREST);
 	m_1Texture = CreatePngTexture("./Texture/Texture1.png", GL_NEAREST);
 	m_2Texture = CreatePngTexture("./Texture/Texture2.png", GL_NEAREST);
 	m_3Texture = CreatePngTexture("./Texture/Texture3.png", GL_NEAREST);
 	m_4Texture = CreatePngTexture("./Texture/Texture4.png", GL_NEAREST);
 	m_5Texture = CreatePngTexture("./Texture/Texture5.png", GL_NEAREST);
-	m_6Texture = CreatePngTexture("./Texture/Texturemerge.png", GL_NEAREST);
+	m_6Texture = CreatePngTexture("./Texture/Texturemerge.png", GL_NEAREST);*/
 
+	m_ParticleTexture = CreatePngTexture("./particle.png", GL_NEAREST);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -435,7 +436,11 @@ void Renderer::DrawParticleEffect()
 	int uniformLoc_Time = -1;
 	uniformLoc_Time = glGetUniformLocation(program, "u_Time");
 	glUniform1f(uniformLoc_Time, g_time);
-	g_time += 0.0005;
+	g_time += 0.005;
+
+	int texULoc = glGetUniformLocation(program, "u_Texture");
+	glUniform1i(texULoc, 0);
+	glBindTexture(GL_TEXTURE_2D, m_ParticleTexture);
 
 
 
@@ -530,7 +535,13 @@ void Renderer::DrawFragmentSandbox()
 	uniformLoc_Time = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uniformLoc_Time, g_time);
 	g_time += 0.002;
-	
+
+	int uniformLoc_Texture = -1;
+	uniformLoc_Texture = glGetUniformLocation(shader, "u_Texture");
+	glUniform1i(uniformLoc_Texture, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -666,7 +677,7 @@ void Renderer::CreateParticles(int numParticles)
 	float centerX, centerY;
 	centerX = 0.f;
 	centerY = 0.f;
-	float size = 0.01f;
+	float size = 0.1f;
 	int particleCount = numParticles;
 	m_ParticleVerticesCount = particleCount * 6;
 	int floatCount = particleCount * 6 * 3; // x,y,z per vertex

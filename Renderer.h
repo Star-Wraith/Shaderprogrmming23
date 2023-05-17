@@ -88,5 +88,6 @@ private:
 	GLuint m_6Texture = 0;
 	GLuint m_CurrentTexID = 0;
 	GLuint m_MergedTexID = 0;
+	GLuint m_ParticleTexture = 0;
 };
 

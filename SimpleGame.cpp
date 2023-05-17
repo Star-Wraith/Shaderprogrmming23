@@ -33,9 +33,9 @@ void RenderScene(void)
 	
 	//g_Renderer->Class0310_Render();
 	//g_Renderer->DrawParticleEffect();
-	//g_Renderer->DrawFragmentSandbox();
+	g_Renderer->DrawFragmentSandbox();
 	//g_Renderer->DrawVertexSandbox();
-	g_Renderer->DrawTextureSandbox();
+	//g_Renderer->DrawTextureSandbox();
 	
 	
 

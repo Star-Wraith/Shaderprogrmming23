@@ -5,6 +5,8 @@ layout(location=0) out vec4 FragColor;
 varying vec4 v_Color;
 in vec2 v_UV;
 
+uniform sampler2D u_Texture;
+
 void circle(){
 
 	vec2 temp = v_UV - vec2(0.5,0.5);
@@ -31,10 +33,15 @@ void circles(){
 	FragColor = vec4(value) * v_Color;
 }
 
+void Textured(){
+	vec4 result = texture(u_Texture, v_UV) * v_Color;
+	FragColor = result;
+}
+
 void main()
 {
 	//FragColor = v_Color;
-	circle();
+	//circle();
 	//circles();
-
+	Textured();
 }
