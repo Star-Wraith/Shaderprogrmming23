@@ -10,6 +10,7 @@ uniform float u_Time;
 uniform sampler2D u_Texture;
 const float c_PI = 3.141592;
 
+
 void test(){
 
 	float newValueX = v_Texcoord.x * 10 * c_PI;
@@ -159,4 +160,8 @@ void main()
 	//rader();
 	//flag();
 	realflag();
+
+	//FragColor = texture(u_Texture, vec2(v_Texcoord.x,v_Texcoord.y));
+
+
 }

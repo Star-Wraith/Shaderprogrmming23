@@ -8,6 +8,8 @@ uniform vec2 u_XYRepeat;
 
 uniform float u_Step;
 
+uniform float u_SeqNum;
+
 in vec2 v_TexPos;
 
 void P1(){
@@ -81,9 +83,23 @@ void MultiTexture(){
 	FragColor = texture(u_TexSampler, newTexPos);
 }
 
+void SATexture(){
+
+	float seqNum = u_SeqNum;
+	float nX = int(seqNum)%8;
+	float nY = floor(seqNum/8.0);
+	float offsetX = nX  / 8.0;
+	float offsetY = nY / 6.0;
+	float x = offsetX + v_TexPos.x/8.0;
+	float y = offsetY + v_TexPos.y/6.0;
+
+	vec2 newTexPos = vec2(x,y);
+	FragColor = texture(u_TexSampler, newTexPos);
+}
+
 void main()
 {
-	MultiTexture();
+	//MultiTexture();
 	
-	//FragColor = texture(u_TexSampler, newTexPos);
+	SATexture();
 }
