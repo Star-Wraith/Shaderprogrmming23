@@ -17,8 +17,8 @@ but WITHOUT ANY WARRANTY.
 
 Renderer* g_Renderer = NULL;
 
-int g_WindowSizeX = 1024;
-int g_WindowSizeY = 1024;
+int g_WindowSizeX = 512;
+int g_WindowSizeY = 512;
 
 void RenderScene(void)
 {
@@ -33,10 +33,10 @@ void RenderScene(void)
 	
 	//g_Renderer->Class0310_Render();
 	//g_Renderer->DrawParticleEffect();
-	//g_Renderer->DrawFragmentSandbox();
+	g_Renderer->DrawFragmentSandbox();
 	//g_Renderer->DrawVertexSandbox();
 	//g_Renderer->DrawTextureSandbox();
-	g_Renderer->DrawGridMesh();
+	//g_Renderer->DrawGridMesh();
 	
 
 

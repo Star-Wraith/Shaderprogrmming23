@@ -38,6 +38,7 @@ private:
 	void CreateTexture();
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 	void CreateGridMesh(int countX, int countY);
+	void CreateFBOs();
 
 	//particle VBO
 	void CreateParticles(int numParticles);
@@ -98,5 +99,12 @@ private:
 	GLuint m_GridMeshVBO = 0;
 	GLuint m_GridMeshShader = 0;
 
+	//FBO
+	GLuint m_AFBOTexture = 0;
+	GLuint m_BFBOTexture = 0;
+	GLuint m_CFBOTexture = 0;
+	GLuint m_DepthRenderBuffer = 0;
+
+	GLuint m_A_FBO = 0;
 };
 
