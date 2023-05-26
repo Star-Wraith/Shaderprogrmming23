@@ -38,7 +38,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Create grid mesh
 	CreateGridMesh(64,64);
 
-	CreateFBOs();
+	//CreateFBOs();
 
 	m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
 	/*m_0Texture = CreatePngTexture("./Texture/Texture0.png", GL_NEAREST);
@@ -51,6 +51,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	m_ParticleTexture = CreatePngTexture("./particle.png", GL_NEAREST);
 	m_ExplosiveTexture = CreatePngTexture("./load.png", GL_NEAREST);
+	m_KoreaTexture = CreatePngTexture("./korea.png", GL_NEAREST);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -645,6 +646,19 @@ void Renderer::DrawGridMesh()
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_GridMeshVBO);
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	GLuint samplerULoc = glGetUniformLocation(shader, "u_TexSampler");
+	glUniform1i(samplerULoc, 0);
+
+
+	GLuint timeULoc = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(timeULoc, g_time);
+	g_time += 0.0005;
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_KoreaTexture);
+
 
 	glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
 }
