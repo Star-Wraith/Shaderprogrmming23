@@ -1,6 +1,10 @@
 #version 330
 
-layout(location=0) out vec4 FragColor;
+layout(location=0) out vec4 FragColor0;
+layout(location=1) out vec4 FragColor1;
+layout(location=2) out vec4 FragColor2;
+layout(location=3) out vec4 FragColor3;
+layout(location=4) out vec4 FragColor4;
 
 in vec2 v_Texcoord;
 
@@ -20,7 +24,7 @@ void test(){
 
 
 	float newColor = max(outColorGrayVertical, outColorGrayHorizontal);
-	FragColor = vec4(newColor);
+	FragColor0 = vec4(newColor);
 
 }
 
@@ -38,10 +42,10 @@ void circle(){
 
 
 	if( d < 0.1 || d1 < 0.1 || d2 < 0.1){
-		FragColor = vec4(1);
+		FragColor1 = vec4(1);
 	}
 	else{
-		FragColor = vec4(0);
+		FragColor1 = vec4(0);
 	}
 
 }
@@ -53,7 +57,7 @@ void circles(){
 	float d = length(temp);
 	float value = sin(50*d);  // 원을 ?개 만드려면 어느 정도 값을 넣어야 하나를 공부하기!
 	
-	FragColor = vec4(value);
+	FragColor2 = vec4(value);
 }
 
 void rader(){
@@ -87,7 +91,7 @@ void rader(){
 
 
 
-	FragColor = vec4(result + 10 * value);
+	FragColor3 = vec4(result + 10 * value);
 
 }
 
@@ -117,11 +121,11 @@ void flag(){
 	float sinValue = 0.5 * sin(2* v_Texcoord.x * 2.0 * c_PI - u_Time); // -u_Time이면 오른쪽 +면 왼쪽으로감
 
 	if(v_Texcoord.y * 2.0 - 1 < sinValue && v_Texcoord.y * 2.0 - 1> sinValue - 0.01 ){
-		FragColor = vec4(1);
+		FragColor4 = vec4(1);
 	}
 	else{
 		
-		FragColor = vec4(0);
+		FragColor4 = vec4(0);
 	}
 
 
@@ -144,21 +148,20 @@ void realflag(){
 		float yDistance = yValue - (sinValue*v_Texcoord.x  - 0.75);
 		float vY = 1.0 - yDistance / yWidth;
 
-		FragColor = texture(u_Texture, vec2(vX, vY));
+		FragColor4 = texture(u_Texture, vec2(vX, vY));
 		//FragColor = vec4(vX, vY, 0, 1);
 	}
 	else{
-		FragColor = vec4(0);
+		FragColor4 = vec4(0);
 	}
 }
 
 void main()
 {
-	//test();
-	//circle();
-	//circles();
-	//rader();
-	//flag();
+	test();
+	circle();
+	circles();
+	rader();
 	realflag();
 
 	//FragColor = texture(u_Texture, vec2(v_Texcoord.x,v_Texcoord.y));
