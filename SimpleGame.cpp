@@ -32,12 +32,13 @@ void RenderScene(void)
 	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
 	
 	//g_Renderer->Class0310_Render();
-	//g_Renderer->DrawParticleEffect();
+	g_Renderer->DrawParticleEffect();
 	g_Renderer->DrawFragmentSandbox();
-	//g_Renderer->DrawVertexSandbox();
-	//g_Renderer->DrawTextureSandbox();
+	g_Renderer->DrawVertexSandbox();
+	g_Renderer->DrawTextureSandbox();
 	//g_Renderer->DrawGridMesh();
 	
+	g_Renderer->DrawFBOTexture();
 
 
 	glutSwapBuffers();
