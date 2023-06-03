@@ -26,6 +26,7 @@ public:
 	void DrawTextureSandbox();
 	void DrawGridMesh();
 	void DrawFBOTexture();
+	void DrawParticleWithBloom();
 	
 
 private:
@@ -40,6 +41,7 @@ private:
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 	void CreateGridMesh(int countX, int countY);
 	void CreateFBOs();
+	void PrepareBloom();
 
 	//particle VBO
 	void CreateParticles(int numParticles);
@@ -123,6 +125,19 @@ private:
 	void DrawTexture(float x, float y, float scaleX, float scaleY, GLuint texID);
 	GLuint m_DrawTextureVBO = 0;
 	GLuint m_DrawTextureShader = 0;
+	
+	//Bloom effect
+	GLuint m_HDRFBO = 0;
+	GLuint m_HDRLowTexture = 0;
+	GLuint m_HDRHighTexture = 0;
+	GLuint m_PingpongFBO[2] = { 0, 0 };
+	GLuint m_PingpongTexture[2] = { 0, 0 };
+	GLuint m_FullRectVBO = 0;
+	GLuint m_GaussianBlurHShader = 0;
+	GLuint m_GaussianBlurVShader = 0;
+	void DrawGaussianBlur(GLuint texID, GLuint targetFBOID, GLuint shader);
+	GLuint m_DrawMergeTextureShader = 0;
+	void DrawMergeBloomTexture(GLuint sceneTexID, GLuint bloomTexID, float exposure);
 
 };
 
