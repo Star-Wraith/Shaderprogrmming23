@@ -52,7 +52,10 @@ void P5(){
 	float y = fract(v_TexPos.y*y_repeat);
 	vec2 newTexPos = vec2(x,y);
 	FragColor = texture(u_TexSampler, newTexPos);
+
 }
+
+
 
 void P6(){
 	float x_repeat = u_XYRepeat.x;
@@ -64,14 +67,20 @@ void P6(){
 	FragColor = texture(u_TexSampler, newTexPos);
 }
 
-void P7(){ // 시헝 50% <- 왠만하면 나온다는 뜻, 이거랑 똑같진 않지요
-	//float x_repeat = u_XYRepeat.x;
-	//float y_repeat = u_XYRepeat.y;
-	float y = (v_TexPos.x + v_TexPos.y);
-	float x = fract(v_TexPos.x + (1.0 - v_TexPos.y));
+void P7(){ // 시험 50% <- 왠만하면 나온다는 뜻, 이거랑 똑같진 않지요
+	float repeat = 2;
+	float y = repeat * (v_TexPos.x + v_TexPos.y);
+	float x = fract(v_TexPos.x + (1.0 - v_TexPos.y)) + floor((1.0 - (v_TexPos.x + v_TexPos.y)) * repeat) * 0.5;
 	vec2 newTexPos = vec2(x,y);
 	FragColor = texture(u_TexSampler, newTexPos);
 	//FragColor = vec4(x);
+}
+
+void P8(){
+	float tx = fract(v_TexPos.x * 3.0);
+	float ty = v_TexPos.y + floor(v_TexPos.x * 3.0)/3;
+	FragColor = texture(u_TexSampler, vec2(tx,ty));
+
 }
 
 void MultiTexture(){
@@ -102,4 +111,6 @@ void main()
 	//MultiTexture();
 	
 	SATexture();
+
+	//P7();
 }

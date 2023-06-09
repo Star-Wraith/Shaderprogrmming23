@@ -89,11 +89,8 @@ void P1()
 
 }
 
-void main()
+void P2()
 {
-	GraphSin();
-	
-	/*
 	vec4 newPosition = vec4(0, 0, 0, 1);
 
 	float t = fract(u_Time/10.0)*10.0;
@@ -101,21 +98,30 @@ void main()
 	//float t = u_Time; // 아 속도 차이 미세하게 바꿀때 스칼라 값 바꾸려고 저런듯?
 
 	
-	newPosition.x = -1.0 + a_Position.x + abs(t*a_Vel.x);
-	float value = 4 * c_PI * newPosition.x; // 내가 추가한 코든데 점이 sin좌표계가 이동하듯이 변경해줌(pos.y에서 빼면서)
+	//newPosition.x = -1.0 + a_Position.x + abs(t*a_Vel.x);
+	//float value = 4 * c_PI * newPosition.x; // 내가 추가한 코든데 점이 sin좌표계가 이동하듯이 변경해줌(pos.y에서 빼면서)
 
 
-	float yTime = (t/10.0) * 2 *c_PI;		  
-	newPosition.y = a_Position.y + sin(value - yTime); 
+	//float yTime = (t/10.0) * 2 *c_PI;		  
+	//newPosition.y = a_Position.y + sin(value - yTime); 
 
-	//newPosition.x = a_Position.x + t * c_Vel.x;
-	//float yTime = (t/10.0) * 2 *c_PI;		   // 시험문제!!!!	
-	//newPosition.y = a_Position.y + sin(yTime); // 시험문제!!!!
+	
+	float yTime = (t/10.0) * 2 *c_PI;		   // 시험문제!!!!
+	newPosition.x = a_Position.x;
+	newPosition.y = a_Position.y + sin(yTime); // 시험문제!!!!
 
 	gl_Position = newPosition;
 	v_Color = a_Color;
 	v_UV = a_UV;
-	*/
+	
+}
+
+void main()
+{
+	GraphSin();
+	
+	
+
 
 	/*
 	// 원 갯수 구하려고 낫둔 식
@@ -126,4 +132,6 @@ void main()
 
 	//P1();
 
+	//P2();
+	
 }

@@ -42,10 +42,10 @@ void circle(){
 
 
 	if( d < 0.1 || d1 < 0.1 || d2 < 0.1){
-		FragColor1 = vec4(1);
+		FragColor0 = vec4(1);
 	}
 	else{
-		FragColor1 = vec4(0);
+		FragColor0 = vec4(0);
 	}
 
 }
@@ -57,7 +57,7 @@ void circles(){
 	float d = length(temp);
 	float value = sin(50*d);  // 원을 ?개 만드려면 어느 정도 값을 넣어야 하나를 공부하기!
 	
-	FragColor2 = vec4(value);
+	FragColor0 = vec4(value);
 }
 
 void rader(){
@@ -70,7 +70,7 @@ void rader(){
 	//c_PI*d * x <- 여길 크게 해도 원이 얇아지고 pow, 12 < 이부분도 크게하면 얇아지네
 	//0.2는 크게 하면 커지고 -0.5는 -를 크게하면 작아짐
 
-	float value = 0.2* (pow(sin(c_PI*d*2 - 1 * u_Time), 12)-0.5); // 원이 얇아진다.
+	float value = 0.2* (pow(sin(c_PI*d*2 - 1 *u_Time), 12)-0.5); // 원이 얇아진다.
 	float temp1 = ceil(value);
 
 
@@ -91,14 +91,15 @@ void rader(){
 
 
 
-	FragColor3 = vec4(result + 10 * value);
+	FragColor0 = vec4(result + 10 * value);
 
 }
 
 void flag(){
 
+	
 	float finalColor  = 0;
-	/*
+	
 	for(int i = 0; i< 5; ++i){
 		float newTime = u_Time + i * 0.2;
 		float newColor = v_Texcoord.x * 0.5 * sin(v_Texcoord.x * c_PI*2*2 - 1 * newTime);
@@ -113,23 +114,25 @@ void flag(){
 		}
 		else{
 		}
-	}*/
-
+	}
+	FragColor0 = vec4(finalColor);
+	
 	
 
-
+	/*
 	float sinValue = 0.5 * sin(2* v_Texcoord.x * 2.0 * c_PI - u_Time); // -u_Time이면 오른쪽 +면 왼쪽으로감
 
 	if(v_Texcoord.y * 2.0 - 1 < sinValue && v_Texcoord.y * 2.0 - 1> sinValue - 0.01 ){
-		FragColor4 = vec4(1);
+		FragColor0 = vec4(1);
 	}
 	else{
 		
-		FragColor4 = vec4(0);
+		FragColor0 = vec4(0);
 	}
+	*/
+	
 
 
-	//FragColor = vec4(finalColor);
 	
 }
 
@@ -148,23 +151,24 @@ void realflag(){
 		float yDistance = yValue - (sinValue*v_Texcoord.x  - 0.75);
 		float vY = 1.0 - yDistance / yWidth;
 
-		FragColor4 = texture(u_Texture, vec2(vX, vY));
+		FragColor0 = texture(u_Texture, vec2(vX, vY));
 		//FragColor = vec4(vX, vY, 0, 1);
 	}
 	else{
-		FragColor4 = vec4(0);
+		FragColor0 = vec4(0);
 	}
 }
 
 void main()
 {
-	test();
-	circle();
-	circles();
-	rader();
+	//test();
+	//circle();
+	//circles();
+	//rader();
+	//flag();
 	realflag();
 
-	//FragColor = texture(u_Texture, vec2(v_Texcoord.x,v_Texcoord.y));
+	//FragColor0 = texture(u_Texture, vec2(v_Texcoord.x,v_Texcoord.y));
 
 
 }

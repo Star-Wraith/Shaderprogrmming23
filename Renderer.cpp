@@ -639,10 +639,10 @@ void Renderer::DrawFragmentSandbox()
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glClearColor(1, 1, 1, 1);
 	//glViewport(0, 0, 512, 512);
-	glViewport(0, 0, 512, 512);
+	/*glViewport(0, 0, 512, 512);
 	GLenum drawBuffers[5] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
 	GL_COLOR_ATTACHMENT3 , GL_COLOR_ATTACHMENT4};
-	glDrawBuffers(5, drawBuffers);
+	glDrawBuffers(5, drawBuffers);*/
 
 
 	GLuint shader = m_FragmentSandboxShader;
@@ -720,15 +720,15 @@ void Renderer::DrawTextureSandbox()
 
 
 	GLuint samplerULoc = glGetUniformLocation(shader, "u_TexSampler");
-	glUniform1i(samplerULoc, 7);
+	glUniform1i(samplerULoc, 0);
 	//glUniform1i(samplerULoc, m_CurrentTexID);
 
 	
-	//glActiveTexture(GL_TEXTURE);
-	////glBindTexture(GL_TEXTURE_2D, m_CheckerBoardTexture);
-	//glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+	glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, m_CheckerBoardTexture);
+	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
 
-	GLuint stepULoc = glGetUniformLocation(shader, "u_Step");
+	/*GLuint stepULoc = glGetUniformLocation(shader, "u_Step");
 	glUniform1f(stepULoc, (float)m_CurrentTexID);
 
 	GLuint seqULoc = glGetUniformLocation(shader, "u_SeqNum");
@@ -762,7 +762,7 @@ void Renderer::DrawTextureSandbox()
 	glBindTexture(GL_TEXTURE_2D, m_6Texture);
 
 	glActiveTexture(GL_TEXTURE7);
-	glBindTexture(GL_TEXTURE_2D, m_ExplosiveTexture);
+	glBindTexture(GL_TEXTURE_2D, m_ExplosiveTexture);*/
 
 
 

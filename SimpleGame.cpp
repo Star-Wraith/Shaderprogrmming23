@@ -36,8 +36,8 @@ void RenderScene(void)
 	//g_Renderer->DrawFragmentSandbox();
 	//g_Renderer->DrawVertexSandbox();
 	//g_Renderer->DrawTextureSandbox();
-	//g_Renderer->DrawGridMesh();
-	g_Renderer->DrawParticleWithBloom();
+	g_Renderer->DrawGridMesh();
+	//g_Renderer->DrawParticleWithBloom();
 	
 	//g_Renderer->DrawFBOTexture();
 

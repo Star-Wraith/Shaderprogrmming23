@@ -61,9 +61,8 @@ void Textured()
 
 void main()
 {
-	//FragColor = v_Color;
+	//FragColor0 = vec4(1);
 	//circle();
 	//circles();
 	Textured();
-
 }
