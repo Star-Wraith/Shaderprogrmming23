@@ -4,6 +4,8 @@
 #include "windows.h"
 #include <assert.h>
 
+//고생했다.
+
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
 	Initialize(windowSizeX, windowSizeY);
